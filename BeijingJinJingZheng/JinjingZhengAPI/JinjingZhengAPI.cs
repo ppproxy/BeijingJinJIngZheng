@@ -34,7 +34,7 @@ namespace JinjingZheng
             o["phone"] = phone;
             o["regist"] = regist;
             string url = "https://bjjj.zhongchebaolian.com/common_api/mobile/standard/verification";
-            HttpPost(url, o.ToString(), "application/json", (result, ex) => {
+            HttpPost(url, o.ToString(), "application/json","", (result, ex) => {
                 if (ex == null) {
                     try {
                         cb?.Invoke(JObject.Parse(result));
@@ -68,7 +68,7 @@ namespace JinjingZheng
 
 
             string url = "https://api.accident.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/login";
-            HttpPost(url, o.ToString(), "application/json", (result, ex) => {
+            HttpPost(url, o.ToString(), "application/json","", (result, ex) => {
                 if (ex == null) {
                     try {
                         cb?.Invoke(JObject.Parse(result));
@@ -96,7 +96,8 @@ namespace JinjingZheng
                 token = Utils.CalcToken(),
                 appsource = ""
             });
-            HttpPost(url, data, "application/x-www-form-urlencoded; charset=UTF-8", (result, ex) => {
+            HttpPost(url, data, "application/x-www-form-urlencoded; charset=UTF-8", 
+                "https://api.jinjingzheng.zhongchebaolian.com/enterbj/jsp/enterbj/index.jsp", (result, ex) => {
                 if (ex == null) {
                     try {
                         cb?.Invoke(JObject.Parse(result));
@@ -177,7 +178,7 @@ namespace JinjingZheng
 
 
 
-            HttpPost(url, data, "application/x-www-form-urlencoded; charset=UTF-8", (result, ex) => {
+            HttpPost(url, data, "application/x-www-form-urlencoded; charset=UTF-8","", (result, ex) => {
                 if (ex == null) {
                     try {
                         cb?.Invoke(JObject.Parse(result));
@@ -198,7 +199,7 @@ namespace JinjingZheng
             return true;
         }
 
-        private static void HttpPost(string url, string body,string contenttype,HTTPCallback cb)
+        private static void HttpPost(string url, string body,string contenttype,string referer,HTTPCallback cb)
         {
             byte[] request_body = Encoding.UTF8.GetBytes(body);
             try
@@ -214,6 +215,7 @@ namespace JinjingZheng
                 request.ContentType = contenttype;
                 request.Headers.Add("Accept-Encoding", "gzip, deflate, br");
                 request.Headers.Add("Accept-Language", "zh-Hans-CN;q=1");
+                request.Referer = referer;
                 request.KeepAlive = true;
 
                 request.ContentLength = request_body.Length;

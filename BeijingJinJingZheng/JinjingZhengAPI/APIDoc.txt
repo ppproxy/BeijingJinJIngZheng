@@ -36,6 +36,8 @@ ____________________________
 
 #获取申请信息列表
 =request:
+
+
 POST https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/entercarlist HTTP/1.1
 Host: api.jinjingzheng.zhongchebaolian.com
 Accept: */*
@@ -49,7 +51,8 @@ Connection: keep-alive
 User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12F70 Safari/600.1.4
 Referer: https://api.jinjingzheng.zhongchebaolian.com/enterbj/jsp/enterbj/index.jsp
 Cookie: CNZZDATA1260761932=1485983547-1479980897-https%253A%252F%252Fapi.jinjingzheng.zhongchebaolian.com%252F%7C1479980897
-____________________________
+
+________________
 userid=f4232e85123456789cdd0dab5bd6&appkey=kkk&deviceid=ddd&timestamp=1480065999000&token=1234565963C3D450&appsource=
 =response:
 {"datalist":[{"carid":"15583446","userid":"f4232e85656516659a281cdd0dab5bd6","licenseno":"冀A0466E","applyflag":"0","carapplyarr":[{"applyid":"156156165","carid":"1516","cartype":"02","engineno":"25515","enterbjend":"2016-11-27","enterbjstart":"2016-11-25","existpaper":"","licenseno":"冀564401E","loadpapermethod":"","remark":"6361266666666","status":"1","syscode":"","syscodedesc":"","userid":"asdsadwdawdawd09a281cdd0dab5bd6"}]}],"rescode":"200","resdes":"获取申请信息列表成功"}
