@@ -178,7 +178,9 @@ namespace JinjingZheng
 
 
 
-            HttpPost(url, data, "application/x-www-form-urlencoded; charset=UTF-8","", (result, ex) => {
+            HttpPost(url, data, "application/x-www-form-urlencoded; charset=UTF-8",
+                "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/loadotherdrivers",
+                (result, ex) => {
                 if (ex == null) {
                     try {
                         cb?.Invoke(JObject.Parse(result));
