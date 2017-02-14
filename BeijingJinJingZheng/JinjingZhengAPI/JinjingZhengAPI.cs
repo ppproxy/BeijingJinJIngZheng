@@ -15,11 +15,16 @@ using System.IO;
 namespace JinjingZheng
 {
 
-    public delegate void APICallBack(JObject result,System.Exception ex=null);
-    public delegate void HTTPCallback(string result, System.Exception ex = null);
+    public delegate void APICallBack(object result,System.Exception ex=null);
+    
+ 
 
     public class JinJingZhengAPI
     {
+
+        private JinjingZhengHttpClient http = new JinjingZhengHttpClient();
+
+
         /// <summary>
         /// send: {"phone":"xxxxxxx","regist"1"}
         /// rep:{"verification":"","resdes":"短信发送成功","rescode":"200"}
@@ -27,17 +32,17 @@ namespace JinjingZheng
         /// <param name="phone"></param>
         /// <param name="regist"></param>
         /// <param name="cb"></param>
-        public static void SendVerifyCode(string phone, string regist, APICallBack cb)
+        public void SendVerifyCode(string phone, string regist, APICallBack cb)
         {
 
             JObject o = new JObject();
             o["phone"] = phone;
             o["regist"] = regist;
             string url = "https://bjjj.zhongchebaolian.com/common_api/mobile/standard/verification";
-            HttpPost(url, o.ToString(), "application/json","", (result, ex) => {
+            http.HttpPost(url, o.ToString(), "application/json","", (result, ex) => {
                 if (ex == null) {
                     try {
-                        cb?.Invoke(JObject.Parse(result));
+                        cb?.Invoke(JObject.Parse(Utils.BytesToString(result)));
                     } catch (Exception e) {
                         cb?.Invoke(null, e);
                     }
@@ -48,7 +53,7 @@ namespace JinjingZheng
         }
 
 
-        public static void Login(string phone,string valicode,APICallBack cb)
+        public  void Login(string phone,string valicode,APICallBack cb)
         {
 
             JObject o = new JObject();
@@ -68,10 +73,10 @@ namespace JinjingZheng
 
 
             string url = "https://api.accident.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/login";
-            HttpPost(url, o.ToString(), "application/json","", (result, ex) => {
+            http.HttpPost(url, o.ToString(), "application/json","", (result, ex) => {
                 if (ex == null) {
                     try {
-                        cb?.Invoke(JObject.Parse(result));
+                        cb?.Invoke(JObject.Parse(Utils.BytesToString(result)));
                     } catch (Exception e) {
                         cb?.Invoke(null, e);
                     }
@@ -83,7 +88,7 @@ namespace JinjingZheng
         }
 
 
-        public static void GetEnterCarList(string userid,APICallBack cb)
+        public  void GetEnterCarList(string userid,APICallBack cb)
         {
 
 
@@ -96,11 +101,11 @@ namespace JinjingZheng
                 token = Utils.CalcToken(),
                 appsource = ""
             });
-            HttpPost(url, data, "application/x-www-form-urlencoded; charset=UTF-8", 
+            http.HttpPost(url, data, "application/x-www-form-urlencoded; charset=UTF-8", 
                 "https://api.jinjingzheng.zhongchebaolian.com/enterbj/jsp/enterbj/index.jsp", (result, ex) => {
                 if (ex == null) {
                     try {
-                        cb?.Invoke(JObject.Parse(result));
+                        cb?.Invoke(JObject.Parse(Utils.BytesToString(result)));
                     } catch (Exception e) {
                         cb?.Invoke(null,e);
                     }
@@ -132,10 +137,10 @@ namespace JinjingZheng
         /// <param name="carmodel">车辆型号</param>
         /// <param name="carregtime">注册时间</param>
         /// <param name="cb"></param>
-        public static void Submitpaper(string userid,int inbjduration,DateTime inbjtime,
+        public  void Submitpaper(string userid,int inbjduration,DateTime inbjtime,
             string licenseno,string engineno,string cartypecode,string vehicletype, Image drivingphoto,
             Image carphoto,string drivername,string driverlicenseno, Image driverphoto, Image personphoto,string carid,
-            string carmodel,string carregtime, APICallBack cb)
+            string carmodel,string carregtime,string code, APICallBack cb)
         {
 
             string url = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/submitpaper";
@@ -168,7 +173,8 @@ namespace JinjingZheng
                 carid = carid,
                 carmodel = carmodel,
                 carregtime = carregtime,
-                envGrade = "3"
+                envGrade = "3",
+                code = code.ToLower().Trim()
             });
 
             data = data.Replace("IMGDRIVINGPHOTO", Utils.Image2Base64(drivingphoto));
@@ -178,12 +184,12 @@ namespace JinjingZheng
 
 
 
-            HttpPost(url, data, "application/x-www-form-urlencoded; charset=UTF-8",
+            http.HttpPost(url, data, "application/x-www-form-urlencoded; charset=UTF-8",
                 "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/loadotherdrivers",
                 (result, ex) => {
                 if (ex == null) {
                     try {
-                        cb?.Invoke(JObject.Parse(result));
+                        cb?.Invoke(JObject.Parse(Utils.BytesToString(result)));
                     } catch (Exception e) {
                         cb?.Invoke(null, e);
                     }
@@ -195,49 +201,27 @@ namespace JinjingZheng
         }
 
 
-        public static bool CheckValidationResult(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
+        public  Image GetCaptcha(APICallBack cb)
         {
-            //直接确认，否则打不开    
-            return true;
+
+            string url = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/getCaptcha?0." + Utils.GetTimestamp();
+            string referer = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/loadotherdrivers";
+            http.HttpGet(url, referer, (result, ex) => {
+                if (ex == null) {
+                    Image img = Image.FromStream(new MemoryStream(result));
+                    cb?.Invoke(img, null);
+                } else {
+                    cb?.Invoke("", ex);
+                }
+
+            });
+
+            return null;
         }
 
-        private static void HttpPost(string url, string body,string contenttype,string referer,HTTPCallback cb)
-        {
-            byte[] request_body = Encoding.UTF8.GetBytes(body);
-            try
-            {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(CheckValidationResult);
-                //request.Proxy = new WebProxy("127.0.0.1", 8888);
 
-                request.Method = "POST";
-                request.ProtocolVersion = new Version(1, 1);
-                request.UserAgent = "BeiJingJiaoJing/1.1.1 (iPhone; iOS 10.1.1; Scale/2.00)";
-                request.Accept = "application/json";
-                request.ContentType = contenttype;
-                request.Headers.Add("Accept-Encoding", "gzip, deflate, br");
-                request.Headers.Add("Accept-Language", "zh-Hans-CN;q=1");
-                request.Referer = referer;
-                request.KeepAlive = true;
 
-                request.ContentLength = request_body.Length;
-                request.GetRequestStream().Write(request_body, 0, request_body.Length);
-                request.BeginGetResponse((result) => {
-                    var response = request.EndGetResponse(result);
-                    var response_stream = response.GetResponseStream();
-                    StreamReader reader = new StreamReader(response_stream, System.Text.Encoding.UTF8);
-                    string str = reader.ReadToEnd();
-                    response.Close();
-                    cb?.Invoke(str,null);
-
-                }, request);
-            }
-            catch (WebException ex)
-            {
-                cb?.Invoke("", ex);
-            }
-
-        }
+       
 
     }
 

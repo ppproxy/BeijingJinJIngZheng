@@ -56,6 +56,8 @@
             this.textBox_personphoto = new System.Windows.Forms.TextBox();
             this.textBox_driverphoto = new System.Windows.Forms.TextBox();
             this.textBox_carphoto = new System.Windows.Forms.TextBox();
+            this.textBox_carregtime = new System.Windows.Forms.TextBox();
+            this.textBox_carmodle = new System.Windows.Forms.TextBox();
             this.textBox_drivingphoto = new System.Windows.Forms.TextBox();
             this.textBox_vehicletype = new System.Windows.Forms.TextBox();
             this.textBox_cartypecode = new System.Windows.Forms.TextBox();
@@ -65,7 +67,9 @@
             this.textBox_userid = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -77,15 +81,17 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.textBox_log = new System.Windows.Forms.TextBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.label17 = new System.Windows.Forms.Label();
-            this.textBox_carmodle = new System.Windows.Forms.TextBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.textBox_carregtime = new System.Windows.Forms.TextBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.textBox_cjy_password = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.textBox_cjy_username = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage_main.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // button_sendverfiy
@@ -178,6 +184,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.groupBox2);
             this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Controls.Add(this.button_run);
             this.tabPage2.Controls.Add(this.checkBox_autuhide);
@@ -306,7 +313,7 @@
             // checkBox_autuhide
             // 
             this.checkBox_autuhide.AutoSize = true;
-            this.checkBox_autuhide.Location = new System.Drawing.Point(256, 290);
+            this.checkBox_autuhide.Location = new System.Drawing.Point(259, 368);
             this.checkBox_autuhide.Name = "checkBox_autuhide";
             this.checkBox_autuhide.Size = new System.Drawing.Size(132, 16);
             this.checkBox_autuhide.TabIndex = 6;
@@ -316,7 +323,7 @@
             // checkBox_actonStartup
             // 
             this.checkBox_actonStartup.AutoSize = true;
-            this.checkBox_actonStartup.Location = new System.Drawing.Point(256, 268);
+            this.checkBox_actonStartup.Location = new System.Drawing.Point(259, 346);
             this.checkBox_actonStartup.Name = "checkBox_actonStartup";
             this.checkBox_actonStartup.Size = new System.Drawing.Size(96, 16);
             this.checkBox_actonStartup.TabIndex = 6;
@@ -326,7 +333,7 @@
             // checkBox_autostart
             // 
             this.checkBox_autostart.AutoSize = true;
-            this.checkBox_autostart.Location = new System.Drawing.Point(256, 246);
+            this.checkBox_autostart.Location = new System.Drawing.Point(259, 324);
             this.checkBox_autostart.Name = "checkBox_autostart";
             this.checkBox_autostart.Size = new System.Drawing.Size(96, 16);
             this.checkBox_autostart.TabIndex = 6;
@@ -372,6 +379,20 @@
             this.textBox_carphoto.Name = "textBox_carphoto";
             this.textBox_carphoto.Size = new System.Drawing.Size(100, 21);
             this.textBox_carphoto.TabIndex = 2;
+            // 
+            // textBox_carregtime
+            // 
+            this.textBox_carregtime.Location = new System.Drawing.Point(345, 291);
+            this.textBox_carregtime.Name = "textBox_carregtime";
+            this.textBox_carregtime.Size = new System.Drawing.Size(100, 21);
+            this.textBox_carregtime.TabIndex = 2;
+            // 
+            // textBox_carmodle
+            // 
+            this.textBox_carmodle.Location = new System.Drawing.Point(345, 266);
+            this.textBox_carmodle.Name = "textBox_carmodle";
+            this.textBox_carmodle.Size = new System.Drawing.Size(100, 21);
+            this.textBox_carmodle.TabIndex = 2;
             // 
             // textBox_drivingphoto
             // 
@@ -440,6 +461,15 @@
             this.label12.TabIndex = 0;
             this.label12.Text = "本人持身份证照片";
             // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(250, 294);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(77, 12);
+            this.label18.TabIndex = 0;
+            this.label18.Text = "车辆注册时间";
+            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -448,6 +478,15 @@
             this.label11.Size = new System.Drawing.Size(65, 12);
             this.label11.TabIndex = 0;
             this.label11.Text = "驾驶证照片";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(250, 269);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(53, 12);
+            this.label17.TabIndex = 0;
+            this.label17.Text = "车辆型号";
             // 
             // label10
             // 
@@ -552,37 +591,51 @@
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
             // 
-            // label17
+            // groupBox2
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(247, 191);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(53, 12);
-            this.label17.TabIndex = 0;
-            this.label17.Text = "车辆型号";
+            this.groupBox2.Controls.Add(this.textBox_cjy_password);
+            this.groupBox2.Controls.Add(this.label20);
+            this.groupBox2.Controls.Add(this.textBox_cjy_username);
+            this.groupBox2.Controls.Add(this.label21);
+            this.groupBox2.Location = new System.Drawing.Point(236, 178);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(234, 78);
+            this.groupBox2.TabIndex = 10;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "超级鹰打码";
             // 
-            // textBox_carmodle
+            // textBox_cjy_password
             // 
-            this.textBox_carmodle.Location = new System.Drawing.Point(342, 188);
-            this.textBox_carmodle.Name = "textBox_carmodle";
-            this.textBox_carmodle.Size = new System.Drawing.Size(100, 21);
-            this.textBox_carmodle.TabIndex = 2;
+            this.textBox_cjy_password.Location = new System.Drawing.Point(106, 44);
+            this.textBox_cjy_password.Name = "textBox_cjy_password";
+            this.textBox_cjy_password.PasswordChar = '*';
+            this.textBox_cjy_password.Size = new System.Drawing.Size(100, 21);
+            this.textBox_cjy_password.TabIndex = 1;
             // 
-            // label18
+            // label20
             // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(247, 216);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(77, 12);
-            this.label18.TabIndex = 0;
-            this.label18.Text = "车辆注册时间";
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(62, 44);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(29, 12);
+            this.label20.TabIndex = 0;
+            this.label20.Text = "密码";
             // 
-            // textBox_carregtime
+            // textBox_cjy_username
             // 
-            this.textBox_carregtime.Location = new System.Drawing.Point(342, 213);
-            this.textBox_carregtime.Name = "textBox_carregtime";
-            this.textBox_carregtime.Size = new System.Drawing.Size(100, 21);
-            this.textBox_carregtime.TabIndex = 2;
+            this.textBox_cjy_username.Location = new System.Drawing.Point(106, 17);
+            this.textBox_cjy_username.Name = "textBox_cjy_username";
+            this.textBox_cjy_username.Size = new System.Drawing.Size(100, 21);
+            this.textBox_cjy_username.TabIndex = 1;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(62, 17);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(41, 12);
+            this.label21.TabIndex = 0;
+            this.label21.Text = "用户名";
             // 
             // FormLogin
             // 
@@ -608,6 +661,8 @@
             this.groupBox1.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -666,6 +721,11 @@
         private System.Windows.Forms.TextBox textBox_carmodle;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TextBox textBox_cjy_password;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox textBox_cjy_username;
+        private System.Windows.Forms.Label label21;
     }
 }
 

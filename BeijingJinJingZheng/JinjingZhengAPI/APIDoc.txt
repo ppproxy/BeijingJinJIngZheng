@@ -78,7 +78,7 @@ User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 10_1_1 like Mac OS X) AppleWebKit
 Referer: https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/loadotherdrivers
 Cookie: JSESSIONID=5B9FE3463122A91DDAA658278784B204
 
-appsource=bjjj@inbjentrancecode1=05@inbjentrancecode=19@inbjduration=2@inbjtime=2016-11-19@appkey=@deviceid=&token=&timestamp=@userid=asdsadwdawdawd09a281cdd0dab5bd6&licenseno=%E5%86%80A0401E@engineno=10330824@cartypecode=02@vehicletype=12@drivingphoto=%252F9j%2@carphoto=%252F9j%252F4AA@drivername=%E8%A2%81%E5%85%A8%E4%BC%9F@driverlicenseno=412702199003106952@driverphoto=%252F@personphoto=@gpslon=@gpslat=@phoneno=@imei=@imsi=@carid=1283446
+appsource=bjjj@inbjentrancecode1=05@inbjentrancecode=19@inbjduration=2@inbjtime=2016-11-19@appkey=@deviceid=&token=&timestamp=@userid=asdsadwdawdawd09a281cdd0dab5bd6&licenseno=%E5%86%80A0401E@engineno=10330824@cartypecode=02@vehicletype=12@drivingphoto=%252F9j%2@carphoto=%252F9j%252F4AA@drivername=%E8%A2%81%E5%85%A8%E4%BC%9F@driverlicenseno=412702199003106952@driverphoto=%252F@personphoto=@gpslon=@gpslat=@phoneno=@imei=@imsi=@carid=1283446&code=vcma
 ____________________________
 =response:
 {"rescode":"200","resdes":"申请成功"}
@@ -88,3 +88,15 @@ ____________________________
 / 替换为%252F
 + 替换为%252B
 = 替换为%253D
+
+
+#获取验证码
+GET https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/getCaptcha?0.46205639000773546 HTTP/1.1
+Host: api.jinjingzheng.zhongchebaolian.com
+Accept: */*
+Connection: keep-alive
+Cookie: JSESSIONID=050709E690F7320B7A17777927122622
+User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 10_2_1 like Mac OS X) AppleWebKit/602.4.6 (KHTML, like Gecko) Mobile/14D27
+Accept-Language: zh-cn
+Referer: https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/loadotherdrivers
+Accept-Encoding: gzip, deflate

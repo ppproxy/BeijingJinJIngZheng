@@ -38,6 +38,10 @@ namespace BeijingJinJingZheng
         public string CarModel;
         public string CarRegTime;
 
+        // 超级鹰验证码识别
+        public string CJYUsername;
+        public string CJYPassword;
+
         public static UserConfig FormFile(string path)
         {
             try {
@@ -46,7 +50,10 @@ namespace BeijingJinJingZheng
                 if (!string.IsNullOrEmpty(config.UserMailPassword)) {
                     config.UserMailPassword = Decrypt(config.UserMailPassword);
                 }
-                
+
+                if (!string.IsNullOrEmpty(config.CJYPassword)) {
+                    config.CJYPassword = Decrypt(config.CJYPassword);
+                }
                 return config;
             }
             catch (System.Exception ex)
@@ -61,12 +68,21 @@ namespace BeijingJinJingZheng
         public void Save(string path)
         {
             try {
+
+                string oldMaillPw = this.UserMailPassword;
+                string oldCJYPw = this.CJYPassword;
                 if (!string.IsNullOrEmpty(this.UserMailPassword)) {
                     this.UserMailPassword = Encrypt(this.UserMailPassword);
                 }
-                
+
+                if (!string.IsNullOrEmpty(this.CJYPassword)) {
+                    this.CJYPassword = Encrypt(this.CJYPassword);
+                }
+
                 string json = JsonConvert.SerializeObject(this);
                 File.WriteAllText(path, json);
+                this.UserMailPassword = oldMaillPw;
+                this.CJYPassword = oldCJYPw;
             }
             catch (System.Exception ex)
             {

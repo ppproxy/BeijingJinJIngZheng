@@ -11,10 +11,13 @@ using JinjingZheng;
 using System.Diagnostics;
 using Microsoft.Win32;
 using System.IO;
+using Newtonsoft.Json.Linq;
+
 namespace BeijingJinJingZheng
 {
     public partial class FormLogin : Form
     {
+        JinJingZhengAPI api = new JinJingZhengAPI();
         public FormLogin()
         {
             System.IO.Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
@@ -24,9 +27,10 @@ namespace BeijingJinJingZheng
 
         private void button_sendverfiy_Click(object sender, EventArgs e)
         {
-            JinJingZhengAPI.SendVerifyCode(textBox_phonenum.Text, "1", (result, ex) => {
+            api.SendVerifyCode(textBox_phonenum.Text, "1", (result, ex) => {
+                var ret = result as JObject;
                 if (ex == null) {
-                    MessageBox.Show(result["resdes"].ToString(),result["rescode"].ToString());
+                    MessageBox.Show(ret["resdes"].ToString(), ret["rescode"].ToString());
                 } else {
                     MessageBox.Show(ex.Message, "短信发送失败");
                 }
@@ -35,12 +39,13 @@ namespace BeijingJinJingZheng
 
         private void button_login_Click(object sender, EventArgs e)
         {
-            JinJingZhengAPI.Login(textBox_phonenum.Text, textBox_code.Text, (result, ex) => {
+            api.Login(textBox_phonenum.Text, textBox_code.Text, (result, ex) => {
                 if (ex == null) {
-                    MessageBox.Show(result["resdes"].ToString(), result["rescode"].ToString());
+                    var ret = result as JObject;
+                    MessageBox.Show(ret["resdes"].ToString(), ret["rescode"].ToString());
                     Debug.Write(result);
                     RunInMainthread(() => {
-                        textBox_uid.Text = "您的用户ID是:" + result["userid"];
+                        textBox_uid.Text = "您的用户ID是:" + ret["userid"];
                     });
                     
                 } else {
@@ -49,20 +54,10 @@ namespace BeijingJinJingZheng
             });
         }
 
-        private void button_entercarlist_Click(object sender, EventArgs e)
-        {
-
-
-            //base64 test
-            var img = Image.FromFile("d:/test.jpg");
-            string b64 = Utils.Image2Base64(img);
-            Console.WriteLine("==============================");
-            Console.WriteLine(b64);
-        }
 
         private void FormLogin_Load(object sender, EventArgs e)
         {
-           
+
             LoadConfig();
 
             if (mConfig.ActAsStartup) {
@@ -105,6 +100,8 @@ namespace BeijingJinJingZheng
             textBox_tomail.Text = mConfig.ToMail;
             textBox_carmodle.Text = mConfig.CarModel;
             textBox_carregtime.Text = mConfig.CarRegTime;
+            textBox_cjy_username.Text = mConfig.CJYUsername;
+            textBox_cjy_password.Text = mConfig.CJYPassword;
 
         }
 
@@ -134,6 +131,8 @@ namespace BeijingJinJingZheng
             mConfig.ToMail= textBox_tomail.Text;
             mConfig.CarModel = textBox_carmodle.Text;
             mConfig.CarRegTime = textBox_carregtime.Text;
+            mConfig.CJYUsername = textBox_cjy_username.Text;
+            mConfig.CJYPassword = textBox_cjy_password.Text;
 
             mConfig.Save("./config.json");
         }

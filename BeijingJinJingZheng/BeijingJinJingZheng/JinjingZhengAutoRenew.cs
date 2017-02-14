@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using System.Net.Mail;
 using System.Security.Cryptography;
 using System.IO;
+using NetDemo;
 
 namespace BeijingJinJingZheng
 {
@@ -57,6 +58,7 @@ namespace BeijingJinJingZheng
 
         public enum RunState
         {
+            Captcha,
             EnterCarList,
             WaitingNet,
             Waiting,
@@ -69,7 +71,7 @@ namespace BeijingJinJingZheng
         UserConfig mConfig;
         Thread mWorkerThread;
         public RunState State = RunState.EnterCarList;
-
+        private JinJingZhengAPI api = new JinJingZhengAPI();
         public bool IsRun
         {
             get
@@ -122,9 +124,9 @@ namespace BeijingJinJingZheng
                         // 获取进京证列表
                         State = RunState.WaitingNet;
                         LogWrapper.LogInfo("正在获取进京证列表...");
-                        JinJingZhengAPI.GetEnterCarList(mConfig.UserID, (result, ex) => {
+                            api.GetEnterCarList(mConfig.UserID, (result, ex) => {
                             if (ex == null) {
-                                HandlCheckEnterCar(result);
+                                HandleCheckEnterCar(result as JObject);
                             }else{
                                 HandleError("获取进京证列表失败", ex);
                             }
@@ -154,7 +156,58 @@ namespace BeijingJinJingZheng
             State = RunState.Waiting;
         }
 
-        void HandlCheckEnterCar(JObject result)
+
+        /// <summary>
+        /// 识别验证码
+        /// </summary>
+        void HandleCaptcha(Carapplyarr carinfo)
+        {
+            LogWrapper.LogInfo("正在获取验证码...");
+            State = RunState.WaitingNet;
+            api.GetCaptcha((result,ex) => {
+                if (result != null && result is Image) {
+                    try {
+                        LogWrapper.LogInfo("获取验证码成功，正在识别中...");
+                        var img = result as Image;
+                        MemoryStream ms = new MemoryStream();
+                        img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                        var bytes = ms.GetBuffer();
+                        ms.Close();
+
+                        string str = NetRecognizePic.CJY_RecognizeBytes(bytes, bytes.Length, mConfig.CJYUsername, Utils.MD5String(mConfig.CJYPassword), "96001", "1104", "0", "0", "");
+                        JObject recognizeRet = JObject.Parse(str);
+
+                        string err_no = recognizeRet["err_no"].ToString();
+                        string err_str = recognizeRet["err_str"].ToString();
+                        if (err_no == "0") {
+                            string pic_id = recognizeRet["pic_id"].ToString();
+                            string pic_str = recognizeRet["pic_str"].ToString();
+                            img.Save("./code_" + pic_str + "_" + pic_id + ".jpeg");
+                            img.Dispose();
+                            LogWrapper.LogInfo("验证码识别成功：" + pic_str);
+                            HandleSubmitpaper(carinfo, pic_str, pic_id);
+
+                        } else {
+                            LogWrapper.LogInfo("验证码识别失败：" + err_str);
+                        }
+                    } catch(Exception e) {
+                        LogWrapper.LogInfo("识别验证码时，发生异常：" + e.ToString());
+                    }
+
+                    State = RunState.Waiting;
+
+                } else {
+                    LogWrapper.LogInfo("获取验证码失败：" + ex!=null ? ex.Message : "验证码图片无效.");
+                    State = RunState.Captcha;
+                }
+            });
+        }
+
+        /// <summary>
+        /// 申请进京证
+        /// </summary>
+        /// <param name="result"></param>
+        void HandleCheckEnterCar(JObject result)
         {
             try
             {
@@ -222,8 +275,9 @@ namespace BeijingJinJingZheng
                         // 申请新进京证
                         LogWrapper.LogInfo("您的进京证即将到期,正在为您申请新的进京证");
 
-                        HandleSubmitpaper(enterCarInfolist[0]);
-                        State = RunState.Waiting;
+                        HandleCaptcha(enterCarInfolist[0]);
+
+                        //State = RunState.Waiting;
                         return;
                     }
 
@@ -260,13 +314,18 @@ namespace BeijingJinJingZheng
 
         }
 
-
-        void HandleSubmitpaper(Carapplyarr carinfo)
+        /// <summary>
+        /// 申请进京证
+        /// </summary>
+        /// <param name="carinfo">车辆信息</param>
+        /// <param name="pic_str">验证码文本</param>
+        /// <param name="pic_id">验证码图片ID</param>
+        void HandleSubmitpaper(Carapplyarr carinfo,string pic_str,string pic_id)
         {
             var enterBjStart = DateTime.Now.AddDays(1);
             LogWrapper.LogInfoFormat("正在申请进京证 进京日期 {0} 进京时间 {1} 天", enterBjStart.ToString("yyyy-MM-dd"), mConfig.InbjDuration);
             State = RunState.WaitingNet;
-            JinJingZhengAPI.Submitpaper(mConfig.UserID, mConfig.InbjDuration, enterBjStart, carinfo.licenseno, carinfo.engineno, mConfig.CarTypeCode,
+            api.Submitpaper(mConfig.UserID, mConfig.InbjDuration, enterBjStart, carinfo.licenseno, carinfo.engineno, mConfig.CarTypeCode,
                 mConfig.VehicleType, Image.FromFile(mConfig.DrivingPhoto),
                 Image.FromFile(mConfig.CarPhoto),
                 mConfig.DriverName,
@@ -276,11 +335,12 @@ namespace BeijingJinJingZheng
                 carinfo.carid,
                 mConfig.CarModel,
                 mConfig.CarRegTime,
+                pic_str,
                 (result, ex) => {
-
+                    var ret = result as JObject;
                     if (ex == null) {
-                        string rescode = result["rescode"].ToString();
-                        string resdes = result["resdes"].ToString();
+                        string rescode = ret["rescode"].ToString();
+                        string resdes = ret["resdes"].ToString();
                         if (rescode == "200") {
                             LogWrapper.LogInfo("进京证申请成功,正在审核中.");
                             if (SendMail("进京证申请成功,正在审核" + carinfo.licenseno, enterBjStart.ToString("yyyy-MM-dd")+" " + mConfig.InbjDuration+"天")) {
@@ -291,6 +351,26 @@ namespace BeijingJinJingZheng
                         } else {
                             LogWrapper.LogError(string.Format("申请进京证失败.错误码:{0} 错误信息:{1}", rescode, resdes));
                             SendMail("进京证申请失败:" + rescode, resdes);
+                            if (resdes.Contains("验证码错误")) {
+                                // 验证码错误
+                                LogWrapper.LogInfo("正在向超级鹰报告验证码错误信息...");
+                                //try {
+                                //    string str = NetRecognizePic.CJY_ReportError(mConfig.CJYUsername, Utils.MD5String(mConfig.CJYPassword), pic_id, "96001");
+                                //    JObject reportError = JObject.Parse(str);
+                                //    string err_no = reportError["err_no"].ToString();
+                                //    string err_str = reportError["err_str"].ToString();
+                                //    if (err_no == "0") {
+                                //        LogWrapper.LogInfo("向超级鹰报告验证码错误信息成功!");
+                                //    } else {
+                                //        LogWrapper.LogInfo("向超级鹰报告验证码错误信息失败：" + err_str);
+                                //    }
+                                //} catch {
+                                //    LogWrapper.LogInfo("向超级鹰报告验证码错误信息时，发生错误!");
+                                //}
+
+                                // 继续识别验证码
+                                //HandleCaptcha(carinfo);
+                            }
                         }
 
                     } else {
