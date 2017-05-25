@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace JinjingZheng
 {
@@ -85,8 +83,7 @@ namespace JinjingZheng
             byte[] request_body = Encoding.UTF8.GetBytes(body);
             try {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback(CheckValidationResult);
-           
+
 
                 request.Method = "POST";
                 request.CookieContainer = mCookiesContainer;

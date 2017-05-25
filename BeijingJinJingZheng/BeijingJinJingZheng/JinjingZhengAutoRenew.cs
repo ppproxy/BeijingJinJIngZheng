@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using JinjingZheng;
 using Newtonsoft.Json;
 using System.Drawing;
 using Newtonsoft.Json.Linq;
 using System.Net.Mail;
-using System.Security.Cryptography;
 using System.IO;
 using NetDemo;
 
@@ -275,8 +273,8 @@ namespace BeijingJinJingZheng
                         // 申请新进京证
                         LogWrapper.LogInfo("您的进京证即将到期,正在为您申请新的进京证");
 
-                        HandleCaptcha(enterCarInfolist[0]);
-
+                        //HandleCaptcha(enterCarInfolist[0]);
+                        HandleSubmitpaper(enterCarInfolist[0], "", "");
                         //State = RunState.Waiting;
                         return;
                     }
@@ -302,13 +300,14 @@ namespace BeijingJinJingZheng
 
 
                 } else {
-                    LogWrapper.LogErrorFormat("获取进京证列表失败 {0}:{1}", rep.rescode, rep.resdes);
+                    LogWrapper.LogErrorFormat("申请进京证失败 {0}:{1}", rep.rescode, rep.resdes);
                 }
                 State = RunState.Waiting;
 
             } catch (Exception e)
             {
-                LogWrapper.LogErrorFormat("获取进京证列表失败 {0}",e.Message);
+                LogWrapper.LogErrorFormat("申请进京证失败 {0}",e.Message);
+                State = RunState.Waiting;
             }
             
 

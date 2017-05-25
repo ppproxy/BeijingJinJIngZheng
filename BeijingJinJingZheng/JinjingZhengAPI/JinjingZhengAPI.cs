@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using System.Net.Security;
 using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace JinjingZheng
 {
@@ -99,7 +91,7 @@ namespace JinjingZheng
                 deviceid = "ddd",
                 timestamp = Utils.GetTimestamp(),
                 token = Utils.CalcToken(),
-                appsource = ""
+                appsource = "jjzx"
             });
             http.HttpPost(url, data, "application/x-www-form-urlencoded; charset=UTF-8", 
                 "https://api.jinjingzheng.zhongchebaolian.com/enterbj/jsp/enterbj/index.jsp", (result, ex) => {
@@ -145,7 +137,8 @@ namespace JinjingZheng
 
             string url = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/submitpaper";
             string data = Utils.SerializeQueryString(new {
-                appsource = "bjjj",
+                appsource = "jjzx",
+                hiddentime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 inbjentrancecode1 = "05",
                 inbjentrancecode = "19",
                 inbjduration = inbjduration.ToString(),
@@ -174,7 +167,8 @@ namespace JinjingZheng
                 carmodel = carmodel,
                 carregtime = carregtime,
                 envGrade = "3",
-                code = code.ToLower().Trim()
+                code = code.ToLower().Trim(),
+                sign = "1e58feb9f557453d82d1b39bf59b663d"
             });
 
             data = data.Replace("IMGDRIVINGPHOTO", Utils.Image2Base64(drivingphoto));
