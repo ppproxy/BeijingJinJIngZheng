@@ -4,18 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A0225767-2B51-42B6-A6BD-1DB03D33E56F}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{38A0D1BB-3A82-42E6-A499-72BA6CFDC78B}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BeijingJinJingZheng</RootNamespace>
-    <AssemblyName>BeijingJinJingZheng</AssemblyName>
+    <RootNamespace>JinjingZhengAPI</RootNamespace>
+    <AssemblyName>JinjingZhengAPI</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,17 +21,14 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -41,59 +36,38 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JinjingZhengAutoRenew.cs" />
-    <Compile Include="LoginForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="LoginForm.Designer.cs">
-      <DependentUpon>LoginForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LogWrapper.cs" />
-    <Compile Include="NetRecognizePic.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="BeijingJiaojingApp\AppException.cs" />
+    <Compile Include="BeijingJiaojingApp\BaseResponse.cs" />
+    <Compile Include="BeijingJiaojingApp\BeijingJiaojingApp.cs" />
+    <Compile Include="BeijingJiaojingApp\Car.cs" />
+    <Compile Include="BeijingJiaojingApp\Carapplyarr.cs" />
+    <Compile Include="BeijingJiaojingApp\CarExtentInfo.cs" />
+    <Compile Include="BeijingJiaojingApp\Driver.cs" />
+    <Compile Include="BeijingJiaojingApp\EnterCarInfo.cs" />
+    <Compile Include="BeijingJiaojingApp\HttpClient.cs" />
+    <Compile Include="BeijingJiaojingApp\PassCard.cs" />
+    <Compile Include="BeijingJiaojingApp\Serializer\AutoApplyPasscardConfig.cs" />
+    <Compile Include="BeijingJiaojingApp\Serializer\ConfigManager.cs" />
+    <Compile Include="BeijingJiaojingApp\Serializer\UserConfig.cs" />
+    <Compile Include="BeijingJiaojingApp\Serializer\XmlSerializer.cs" />
+    <Compile Include="JinjingZhengAPI.cs" />
+    <Compile Include="JinjingZhengHttpClient.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserConfig.cs" />
-    <EmbeddedResource Include="LoginForm.resx">
-      <DependentUpon>LoginForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="APIDoc.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\JinjingZhengAPI\BeijingJiaojing.csproj">
-      <Project>{38a0d1bb-3a82-42e6-a499-72ba6cfdc78b}</Project>
-      <Name>BeijingJiaojing</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

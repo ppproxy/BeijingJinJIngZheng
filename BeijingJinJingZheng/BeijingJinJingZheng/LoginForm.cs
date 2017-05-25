@@ -11,6 +11,7 @@ namespace BeijingJinJingZheng
     public partial class FormLogin : Form
     {
         JinJingZhengAPI api = new JinJingZhengAPI();
+        BeijingJiaojingApp app = new BeijingJiaojingApp();
         public FormLogin()
         {
             System.IO.Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
@@ -20,31 +21,60 @@ namespace BeijingJinJingZheng
 
         private void button_sendverfiy_Click(object sender, EventArgs e)
         {
-            api.SendVerifyCode(textBox_phonenum.Text, "1", (result, ex) => {
-                var ret = result as JObject;
-                if (ex == null) {
-                    MessageBox.Show(ret["resdes"].ToString(), ret["rescode"].ToString());
-                } else {
-                    MessageBox.Show(ex.Message, "短信发送失败");
-                }
-            });
+            try
+            {
+                app.SendVefiyCode(textBox_phonenum.Text);
+                MessageBox.Show("发送成功", "提示");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "发送失败");
+            }
+
+
+            //api.SendVerifyCode(textBox_phonenum.Text, "1", (result, ex) =>
+            //{
+            //    var ret = result as JObject;
+            //    if (ex == null)
+            //    {
+            //        MessageBox.Show(ret["resdes"].ToString(), ret["rescode"].ToString());
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show(ex.Message, "短信发送失败");
+            //    }
+            //});
         }
 
         private void button_login_Click(object sender, EventArgs e)
         {
-            api.Login(textBox_phonenum.Text, textBox_code.Text, (result, ex) => {
-                if (ex == null) {
-                    var ret = result as JObject;
-                    MessageBox.Show(ret["resdes"].ToString(), ret["rescode"].ToString());
-                    Debug.Write(result);
-                    RunInMainthread(() => {
-                        textBox_uid.Text = "您的用户ID是:" + ret["userid"];
-                    });
-                    
-                } else {
-                    MessageBox.Show(ex.Message, "登陆失败");
-                }
-            });
+
+
+            try
+            {
+                app.Login(textBox_code.Text);
+                textBox_uid.Text = "您的用户ID是:" + app.UserID;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "登录失败");
+            }
+
+
+            //api.Login(textBox_phonenum.Text, textBox_code.Text, (result, ex) => {
+            //    if (ex == null) {
+            //        var ret = result as JObject;
+            //        MessageBox.Show(ret["resdes"].ToString(), ret["rescode"].ToString());
+            //        Debug.Write(result);
+            //        RunInMainthread(() => {
+            //            textBox_uid.Text = "您的用户ID是:" + ret["userid"];
+            //        });
+
+            //    } else {
+            //        MessageBox.Show(ex.Message, "登陆失败");
+            //    }
+            //});
         }
 
 

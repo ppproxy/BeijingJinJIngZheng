@@ -225,8 +225,18 @@ namespace BeijingJinJingZheng
                     }
 
                     if (enterCarInfolist.Count <= 0) {
-                        LogWrapper.LogInfo("当前没有进京证信息,无法为您申请新的进京证!");
-                        State = RunState.Waiting;
+                        LogWrapper.LogInfo("当前没有有效的进京证,正在申请!");
+                        State = RunState.WaitingNet;
+                        api.GetUserCarList(mConfig.UserID,(carlist,ex)=> {
+                            if (ex == null)
+                            {
+
+                            }
+                            else
+                            {
+                                LogWrapper.LogErrorFormat("获取车辆列表失败:{0}",ex.ToString());
+                            }
+                        }); 
                         return;
                     }
 

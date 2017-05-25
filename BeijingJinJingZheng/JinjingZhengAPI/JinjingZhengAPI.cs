@@ -30,7 +30,7 @@ namespace JinjingZheng
             JObject o = new JObject();
             o["phone"] = phone;
             o["regist"] = regist;
-            string url = "https://bjjj.zhongchebaolian.com/common_api/mobile/standard/verification";
+            string url = "https://api.accidentx.zhongchebaolian.com/mobile/mobile/global/verification";
             http.HttpPost(url, o.ToString(), "application/json","", (result, ex) => {
                 if (ex == null) {
                     try {
@@ -64,7 +64,7 @@ namespace JinjingZheng
 
 
 
-            string url = "https://api.accident.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/login";
+            string url = "https://api.accidentx.zhongchebaolian.com/mobile/mobile/global/login";
             http.HttpPost(url, o.ToString(), "application/json","", (result, ex) => {
                 if (ex == null) {
                     try {
@@ -213,10 +213,20 @@ namespace JinjingZheng
             return null;
         }
 
-
-
-       
-
+        public void GetUserCarList(string userid,APICallBack cb)
+        {
+            string url = "https://api.accidentx.zhongchebaolian.com/mobile/mobile/global/getusercarlist?appkey=0791682354&dicver=0&sn=c9606ab5ebbab0ae302215156675ab36&userid=" + userid;
+            http.HttpGet(url, "", (bytes, ex) => {
+                if (ex != null)
+                {
+                    string json = Utils.BytesToString(bytes);
+                    cb?.Invoke(JObject.Parse(json), null);
+                }
+                else {
+                    cb?.Invoke(null, ex);
+                }
+            });
+        }
     }
 
 
